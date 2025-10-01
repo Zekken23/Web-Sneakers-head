@@ -1,0 +1,111 @@
+/* src/input.css */
+
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* Custom styles untuk auto-scrolling section. */
+.scroller {
+  max-width: 100%;
+  -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+  mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+
+  overflow-x: auto;
+  scrollbar-width: none; /* Untuk Firefox */
+}
+
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.scroller__inner {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  padding-block: 1rem;
+  width: max-content;
+  
+  animation: scroll 30s linear infinite;
+}
+
+.scroller:hover .scroller__inner {
+  animation-play-state: paused;
+}
+
+
+.scroller[data-speed="slow"] .scroller__inner {
+  animation-duration: 60s;
+}
+
+@keyframes scroll {
+  to {
+    transform: translate(calc(-50% - 0.5rem));
+  }
+}
+
+.tag-list {
+  margin: 0;
+  padding-inline: 0;
+  list-style: none;
+}
+
+.collection-card {
+  position: relative;
+  width: 350px;
+  height: 220px;
+  border-radius: 0.5rem;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.collection-card:hover {
+    transform: scale(1.05);
+}
+
+.collection-card span {
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 0.5rem 2rem;
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 0.25rem;
+  backdrop-filter: blur(4px);
+}
+
+/* GANTI BLOK CSS INI DI FILE input.css ANDA */
+
+/* Perubahan untuk efek glow ungu pada New Arrivals & translasi tetangga */
+#new-arrivals .reveal-card {
+    /* Menambahkan will-change untuk optimasi browser */
+    will-change: transform, box-shadow;
+
+    /* Durasi diperpanjang sedikit & kurva easing diubah agar lebih halus */
+    transition: transform 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                box-shadow 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+#new-arrivals .reveal-card:hover {
+    box-shadow: 0 10px 40px -5px rgba(168, 85, 247, 0.6);
+    transform: translateY(-10px);
+}
+
+.translate-left {
+    transform: translateX(-15px);
+}
+
+.translate-right {
+    transform: translateX(15px);
+}
+
+/* Transisi untuk gambar dan kartu tetangga juga disesuaikan */
+#new-arrivals .reveal-card img,
+#new-arrivals .reveal-card.translate-left,
+#new-arrivals .reveal-card.translate-right {
+    transition: transform 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
