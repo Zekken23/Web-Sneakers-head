@@ -1,5 +1,2 @@
 # Web-Sneakers-head
-<<<<<<< HEAD
-=======
-code in the new branch
->>>>>>> ba22792f6b8480579fad6469b5df4a105aea5e68
+so this is my 3 modul projek for Web programing. and i hope yo can just copy it if you want by using git clone.
