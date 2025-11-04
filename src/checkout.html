@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Sneakershead.co</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        #map { height: 400px; }
+    </style>
+</head>
+<body class="bg-[#0F172A] text-white font-[Poppins]">
+
+    <header class="bg-[#0F172A]/80 backdrop-blur-sm fixed top-0 left-0 right-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="./index.html" class="text-2xl font-bold text-white">Sneakershead.co</a>
+            <div class="hidden md:flex space-x-8 items-center">
+                <a href="./index.html" class="hover:text-[#2DD4BF] transition-colors">Home</a>
+                <a href="./product.html" class="hover:text-[#2DD4BF] transition-colors">Products</a>
+                <a href="#new-arrivals" class="hover:text-[#2DD4BF] transition-colors">New Arrivals</a>
+                <a href="./index.html#collection" class="hover:text-[#2DD4BF] transition-colors">Collection</a>
+                <a href="./index.html#contact-us" class="hover:text-[#2DD4BF] transition-colors">Contact</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="hover:text-[#2DD4BF] transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </button>
+                <a href="./checkout.html" class="text-[#2DD4BF] font-bold transition-colors"> <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-32 pb-20">
+        <section id="checkout" class="py-12">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-12">Checkout Pesanan</h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+
+                    <div>
+                        <h3 class="text-2xl font-semibold mb-6">Alamat Pengiriman</h3>
+                        
+                        <form id="checkout-form" class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-300">Nama Lengkap</label>
+                                <input type="text" id="name" class="mt-1 w-full bg-[#1E293B] text-white border border-gray-600 rounded-md p-3 focus:outline-none focus:border-purple-500" required>
+                            </div>
+                            
+                            <div>
+                                <label for="address" class="block text-sm font-medium text-gray-300">Alamat Lengkap (Jalan, Kota)</label>
+                                <input type="text" id="address" placeholder="cth: Jln Tegalgondo, Malang, Indonesia" class="mt-1 w-full bg-[#1E293B] text-white border border-gray-600 rounded-md p-3 focus:outline-none focus:border-purple-500" required>
+                            </div>
+
+                            <button id="verify-address-btn" class="w-full py-3 px-6 rounded-md font-bold text-white bg-gradient-to-r from-teal-500 to-blue-500 hover:scale-105 transition-transform">
+                                Tampilkan Lokasi di Peta
+                            </button>
+                            
+                            <div class="border-t border-gray-700 pt-6">
+                                <h3 class="text-2xl font-semibold mb-6">Metode Pembayaran</h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-center p-4 bg-[#1E293B] rounded-lg">
+                                        <input id="pay-card" name="payment" type="radio" class="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-500" checked>
+                                        <label for="pay-card" class="ml-3 block text-sm font-medium text-white">Kartu Kredit/Debit</label>
+                                    </div>
+                                    <div class="flex items-center p-4 bg-[#1E293B] rounded-lg">
+                                        <input id="pay-ewallet" name="payment" type="radio" class="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-500">
+                                        <label for="pay-ewallet" class="ml-3 block text-sm font-medium text-white">E-Wallet (GoPay, OVO)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h3 class="text-2xl font-semibold mb-6">Lokasi Pengiriman</h3>
+                        
+                        <div id="map" class="w-full bg-[#1E293B] rounded-lg">
+                            </div>
+
+                        <div class="bg-[#1E293B] p-6 rounded-lg shadow-lg mt-8">
+                            <h3 class="text-xl font-semibold mb-4">Ringkasan Pesanan</h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between text-gray-300">
+                                    <span>Air Jordan 1 Chicago</span>
+                                    <span>Rp 5.500k</span>
+                                </div>
+                                <div class="flex justify-between text-gray-300">
+                                    <span>Biaya Pengiriman</span>
+                                    <span>Rp 25k</span>
+                                </div>
+                                <div class="border-t border-gray-600 my-3"></div>
+                                <div class="flex justify-between text-white font-bold text-lg">
+                                    <span>Total</span>
+                                    <span>Rp 5.525k</span>
+                                </div>
+                            </div>
+                            <button type="submit" form="checkout-form" class="mt-6 w-full py-3 px-6 rounded-md font-bold text-white bg-gradient-to-r from-purple-600 to-teal-500 hover:scale-105 transition-transform">
+                                Bayar Sekarang
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact" class="bg-[#1E293B] text-gray-300">
+        <div class="container mx-auto px-6 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-white">Sneakershead.co</h3>
+                    <p class="text-gray-400">Your one-stop destination for the most sought-after sneakers from around the world. Lead the way with style.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4 text-white">Quick Links</h3>
+                    <ul>
+                        <li class="mb-2"><a href="./index.html" class="hover:text-[#2DD4BF]">Home</a></li>
+                        <li class="mb-2"><a href="./product.html" class="hover:text-[#2DD4BF]">Products</a></li>
+                        <li class="mb-2"><a href="./index.html#collection" class="hover:text-[#2DD4BF]">Collection</a></li>
+                        <li class="mb-2"><a href="#" class="hover:text-[#2DD4BF]">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4 text-white">Contact</h3>
+                     <ul>
+                        <li class="mb-2"><p>Jln tegalgondo, Malang, Indonesia</p></li>
+                        <li class="mb-2"><p>Vamos@sneakershead.co</p></li>
+                        <li class="mb-2"><p>+62 857 0473 2289</p></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4 text-white">Subscribe to our newsletter</h3>
+                    <p class="text-gray-400 mb-4">Get the latest updates on new arrivals and special offers.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Enter your email" class="w-full rounded-l-md p-2 bg-[#0F172A] text-white border border-gray-600 focus:outline-none focus:border-[#2DD4BF]">
+                        <button class="bg-[#2DD4BF] text-white font-bold p-2 rounded-r-md hover:bg-opacity-80">Go</button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500">
+                <p>&copy; 2025 Sneakershead.co. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="./checkout.js"></script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2CMFGQuWfEcHN1i4gcP0nMEI7QPMKdJ8&callback=initMap" async defer></script>
+</body>
+</html>

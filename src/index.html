@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sneakershead.co - Lead The Way</title>
+    <link href="./output.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../src/input.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0F172A] text-white font-[Poppins]">
+
+    <!-- bikin navbar -->
+    <header class="bg-[#0F172A]/80 backdrop-blur-sm fixed top-0 left-0 right-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-white">Sneakershead.co</a>
+            <div class="hidden md:flex space-x-8 items-center">
+                <a href="#" class="hover:text-[#2DD4BF] transition-colors">Home</a>
+                <a href="./product.html" class="hover:text-[#2DD4BF] transition-colors">Products</a>
+                <a href="#new-arrivals" class="hover:text-[#2DD4BF] transition-colors">New Arrivals</a>
+                <a href="#collection" class="hover:text-[#2DD4BF] transition-colors">Collection</a>
+                <a href="#contact" class="hover:text-[#2DD4BF] transition-colors">Contact</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="hover:text-[#2DD4BF] transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </button>
+                <a href="../src/checkout.html" class="hover:text-[#2DD4BF] transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero section -->
+
+    <main>
+        <section class="h-screen bg-cover bg-center flex items-center" style="background-image: url('../src/images/toko2.jpg');">
+            <div class="container mx-auto px-6 text-left">
+                <div class="bg-black/30 p-8 rounded-lg max-w-lg reveal-left">
+                    <h1 class="text-5xl md:text-6xl font-black mb-4 leading-tight">PURCHASE YOUR SHOES NOW.</h1>
+                    <p class="text-lg mb-8 text-gray-200">Discover the latest collections from world-class brands. Style, comfort, and performance in one place.</p>
+                    <a href="#new-arrivals" class="bg-gradient-to-r from-[#2DD4BF] to-[#3B82F6] text-white font-bold py-3 px-8 rounded-full hover:scale-105 transition-transform">
+                        Shop Now
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    <!-- new arrival awas lupa -->
+        <section id="new-arrivals" class="py-20">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-12 reveal-up">New Arrivals</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-[#1E293B] rounded-lg overflow-hidden shadow-lg transform hover:-translate-y-2 transition-transform duration-300 reveal-card group relative">
+                        <img src="../src/images/adizero.jpg" alt="Sneaker 1" class="w-full h-64 object-cover transition-transform duration-300">
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl mb-2">Adidas Adizero Adios Pro 4 Black Focus Olive</h3>
+                            <p class="text-gray-400 text-lg">Rp. 4.700k</p>
+                        </div>
+                    </div>
+                    <div class="bg-[#1E293B] rounded-lg overflow-hidden shadow-lg transform hover:-translate-y-2 transition-transform duration-300 reveal-card group relative" style="--delay: 100ms">
+                        <img src="../src/images/jordanlost.png" alt="Sneaker 2" class="w-full h-64 object-cover transition-transform duration-300">
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl mb-2">Nike Air Jordan 1 Chicago Red lost and found</h3>
+                            <p class="text-gray-400 text-lg">Rp. 5.500k</p>
+                        </div>
+                    </div>
+                    <div class="bg-[#1E293B] rounded-lg overflow-hidden shadow-lg transform hover:-translate-y-2 transition-transform duration-300 reveal-card group relative" style="--delay: 200ms">
+                        <img src="https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_2000,h_2000/global/308636/01/sv01/fnd/PHL/fmt/png/BMW-M-Motorsport-Hypnotic-LS-Sneakers" alt="Sneaker 3" class="w-full h-64 object-cover transition-transform duration-300">
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl mb-2">Puma x BMW M Motorsport Hypnotic LS Sneakers</h3>
+                            <p class="text-gray-400 text-lg">Rp. 3.875k</p>
+                        </div>
+                    </div>
+                    <div class="bg-[#1E293B] rounded-lg overflow-hidden shadow-lg transform hover:-translate-y-2 transition-transform duration-300 reveal-card group relative" style="--delay: 300ms">
+                        <img src="https://filebroker-cdn.lazada.co.id/kf/Sb0f4d9f2028b4500b1f57451ee3bf388A.jpg" alt="Sneaker 4" class="w-full h-64 object-cover transition-transform duration-300">
+                        <div class="p-6">
+                            <h3 class="font-bold text-xl mb-2">New Balance 574 Legacy Stone Island Dark Green</h3>
+                            <p class="text-gray-400 text-lg">Rp. 7.794k</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shop by collection -->
+        <section id="collection" class="py-20 bg-[#1E293B]">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-12 reveal-up">Shop By Collection</h2>
+            </div>
+            <div class="scroller" data-speed="slow">
+                <ul class="tag-list scroller__inner">
+                    <li><div class="collection-card" style="background-image: url('https://images.unsplash.com/photo-1527090526205-beaac8dc3c62?q=80&w=1887&auto=format&fit=crop')"><span>WOMENS</span></div></li>
+                    <li><div class="collection-card" style="background-image: url('https://images.unsplash.com/photo-1552346154-21d32810aba3?q=80&w=2070&auto=format&fit=crop')"><span>MENS</span></div></li>
+                    <li><div class="collection-card" style="background-image: url('https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=2070&auto=format&fit=crop')"><span>KIDS</span></div></li>
+                    <li><div class="collection-card" style="background-image: url('../src/images/jordan.jpg')"><span>SPORTS</span></div></li>
+                    <li><div class="collection-card" style="background-image: url('https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=2012&auto=format&fit=crop')"><span>LIFESTYLE</span></div></li>
+                    <li><div class="collection-card" style="background-image: url('https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=1964&auto=format&fit=crop')"><span>LIMITED</span></div></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- testimoni coy -->
+        <section class="py-20">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-12 reveal-up">Client Testimonials</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-[#1E293B] p-8 rounded-xl shadow-lg reveal-card">
+                        <p class="text-gray-300 mb-6">"The best place to find exclusive sneakers! The shipping was incredibly fast and the customer service was top-notch. Highly recommended!"</p>
+                        <div class="flex items-center">
+                            <img class="w-12 h-12 rounded-full mr-4" src="https://i.pravatar.cc/150?img=1" alt="Avatar of Jane Doe">
+                            <div class="text-sm">
+                                <p class="font-semibold">Jonathan</p>
+                                <p class="text-gray-400">Sneaker Enthusiast</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="bg-[#1E293B] p-8 rounded-xl shadow-lg reveal-card" style="--delay: 150ms">
+                        <p class="text-gray-300 mb-6">"I finally found the limited edition pair I've been searching for months. Sneakershead.co is a game changer for collectors like me."</p>
+                        <div class="flex items-center">
+                            <img class="w-12 h-12 rounded-full mr-4" src="../src/images/yusronwe.jpg" alt="Avatar of John Smith">
+                            <div class="text-sm">
+                                <p class="font-semibold">Yusron AL Ghoni</p>
+                                <p class="text-gray-400">Collector</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="bg-[#1E293B] p-8 rounded-xl shadow-lg reveal-card" style="--delay: 300ms">
+                        <p class="text-gray-300 mb-6">"Amazing variety and great prices. The website is so easy to navigate. Will definitely be my go-to store from now on."</p>
+                        <div class="flex items-center">
+                            <img class="w-12 h-12 rounded-full mr-4" src="../src/images/random.jpg" alt="Avatar of Sarah Lee">
+                            <div class="text-sm">
+                                <p class="font-semibold">Salsabil</p>
+                                <p class="text-gray-400">Casual Buyer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- galeri -->
+        <section id="gallery" class="py-20 bg-[#1E293B]">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-12 reveal-up">Sneaker Gallery</h2>
+                
+                <div id="gallery-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <p id="gallery-loading" class="text-center text-gray-400 col-span-full">Memuat galeri...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- bagian contact us -->
+        <section id="contact-us" class="py-20 bg-[#0F172A]">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-4 reveal-up">Contact Us</h2>
+                <p class="text-lg text-gray-400 text-center mb-12 max-w-2xl mx-auto reveal-up">
+                    Punya pertanyaan atau ingin bekerja sama? Hubungi kami dan tim kami akan segera merespons Anda.
+                </p>
+            <div class="flex flex-col md:flex-row gap-12 items-start">
+                <div class="md:w-1/3 w-full reveal-left">
+                    <h3 class="text-2xl font-bold mb-6 text-white">Informasi Kontak</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-[#1E293B] p-3 rounded-full">
+                                <svg class="w-6 h-6 text-[#a855f7]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Alamat</h4>
+                                <p class="text-gray-400">jln Tegalgondo, Malang, Indonesia</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-[#1E293B] p-3 rounded-full">
+                                <svg class="w-6 h-6 text-[#a855f7]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Email</h4>
+                                <p class="text-gray-400">vamos@sneakershead.co</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="bg-[#1E293B] p-3 rounded-full">
+                                <svg class="w-6 h-6 text-[#a855f7]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg">Telepon</h4>
+                                <p class="text-gray-400">+62 857 0473 2289</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- isi contack mu -->
+
+                <div class="md:w-2/3 w-full reveal-right">
+                    <form action="#" method="POST" class="space-y-6 bg-[#1E293B] p-8 rounded-lg shadow-lg">
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="w-full">
+                                <label for="name" class="sr-only">Nama Lengkap</label>
+                                <input type="text" name="name" id="name" placeholder="Nama Lengkap" class="w-full bg-[#0F172A] text-white border border-gray-600 rounded-md p-3 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition">
+                            </div>
+                                <div class="w-full">
+                                    <label for="email" class="sr-only">Email</label>
+                                    <input type="email" name="email" id="email" placeholder="Alamat Email" class="w-full bg-[#0F172A] text-white border border-gray-600 rounded-md p-3 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="subject" class="sr-only">Subjek</label>
+                                <input type="text" name="subject" id="subject" placeholder="Subjek" class="w-full bg-[#0F172A] text-white border border-gray-600 rounded-md p-3 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition">
+                            </div>
+                            <div>
+                                <label for="message" class="sr-only">Pesan</label>
+                                <textarea name="message" id="message" rows="5" placeholder="Pesan Anda" class="w-full bg-[#0F172A] text-white border border-gray-600 rounded-md p-3 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition"></textarea>
+                            </div>
+                            <div>
+                                <button type="submit" class="w-full py-3 px-6 rounded-md font-bold text-white bg-gradient-to-r from-purple-600 to-teal-500 hover:scale-105 transition-transform duration-300">
+                                    Kirim Pesan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-[#1E293B] text-gray-300">
+        <div class="container mx-auto px-6 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 text-white">Sneakershead.co</h3>
+                    <p class="text-gray-400">Your one-stop destination for the most sought-after sneakers from around the world. Lead the way with style.</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4 text-white">Quick Links</h3>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="hover:text-[#2DD4BF]">Home</a></li>
+                        <li class="mb-2"><a href="#new-arrivals" class="hover:text-[#2DD4BF]">New Arrivals</a></li>
+                        <li class="mb-2"><a href="#collection" class="hover:text-[#2DD4BF]">Collection</a></li>
+                        <li class="mb-2"><a href="#" class="hover:text-[#2DD4BF]">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4 text-white">Contact</h3>
+                     <ul>
+                        <li class="mb-2"><p>Jln tegalgondo, Malang, Indonesia</p></li>
+                        <li class="mb-2"><p>Vamos@sneakershead.co</p></li>
+                        <li class="mb-2"><p>+62 857 0473 2289</p></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-4 text-white">Subscribe to our newsletter</h3>
+                    <p class="text-gray-400 mb-4">Get the latest updates on new arrivals and special offers.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Enter your email" class="w-full rounded-l-md p-2 bg-[#0F172A] text-white border border-gray-600 focus:outline-none focus:border-[#2DD4BF]">
+                        <button class="bg-[#2DD4BF] text-white font-bold p-2 rounded-r-md hover:bg-opacity-80">Go</button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-500">
+                <p>&copy; 2025 Sneakershead.co. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="./script.js"></script>
+</body>
+</html>
