@@ -1,29 +1,28 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SneakerController;
-use App\Http\Controllers\AuthController;
+// AuthController biasanya ada di folder Api
+Route::post('register', [\App\Http\Controllers\Api\AuthController::class, 'register']);
+Route::post('login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
 
-Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
-});
-
-Route::get('sneakers', [SneakerController::class, 'index']); // Get All
-Route::get('sneakers/{id}', [SneakerController::class, 'show']);
+// SneakerController biasanya ada di folder Controllers biasa (bukan Api)
+// Jadi kita panggil langsung ke alamat aslinya
+Route::get('sneakers', [\App\Http\Controllers\SneakerController::class, 'index']);
+Route::get('sneakers/{id}', [\App\Http\Controllers\SneakerController::class, 'show']);
 
 
-Route::middleware(['auth:api'])->group(function () {
+// =================================================================
+// 2. PROTECTED ROUTES (Harus Login)
+// =================================================================
+Route::middleware('auth:api')->group(function () {
 
-    // Auth Protected
-    Route::group(['prefix' => 'auth'], function () {
-        Route::post('logout', [AuthController::class, 'logout']);
-        Route::get('me', [AuthController::class, 'me']);
-    });
+    // Auth Features
+    Route::post('logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
+    Route::get('me', [\App\Http\Controllers\Api\AuthController::class, 'me']);
 
-    Route::post('sneakers', [SneakerController::class, 'store']);       // Create
-    Route::put('sneakers/{id}', [SneakerController::class, 'update']);  // Update
-    Route::delete('sneakers/{id}', [SneakerController::class, 'destroy']); // Delete
+    // CRUD Sneakers (Arahkan ke SneakerController di folder utama)
+    Route::post('sneakers', [\App\Http\Controllers\SneakerController::class, 'store']);
+    Route::post('sneakers/{id}', [\App\Http\Controllers\SneakerController::class, 'update']);
+    Route::delete('sneakers/{id}', [\App\Http\Controllers\SneakerController::class, 'destroy']);
 
 });

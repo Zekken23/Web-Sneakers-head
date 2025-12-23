@@ -84,6 +84,7 @@ class SneakerController extends Controller
         $validated = $request->validate([
             'name' => 'sometimes|string',
             'brand' => 'sometimes|string',
+            'size' => 'required|numeric',
             'price' => 'sometimes|numeric',
             'stock' => 'sometimes|integer',
             'description' => 'nullable|string',

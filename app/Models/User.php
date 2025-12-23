@@ -2,33 +2,37 @@
 
 namespace App\Models;
 
-// 1. Tambahkan Import JWTSubject di sini
-use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject; // <--- TAMBAHAN MODUL 6
+// Pastikan namespace ini sesuai dengan package yang kamu install
+// Jika pakai "php-open-source-saver/jwt-auth", gunakan baris ini:
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-// 2. Tambahkan "implements JWTSubject" di baris ini
-class User extends Authenticatable implements JWTSubject // <--- TAMBAHAN MODUL 6
+
+class User extends Authenticatable implements JWTSubject
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    // Tambahkan HasApiTokens di sini
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role', // <--- INI WAJIB ADA (Dan sudah ada di kodemu)
     ];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -48,8 +52,7 @@ class User extends Authenticatable implements JWTSubject // <--- TAMBAHAN MODUL 
         ];
     }
 
-    // 3. Tambahkan dua method wajib di bawah ini agar JWT bekerja
-    // <--- TAMBAHAN MODUL 6 MULAI DARI SINI --->
+    // --- JWT METHODS (WAJIB ADA) ---
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -68,6 +71,9 @@ class User extends Authenticatable implements JWTSubject // <--- TAMBAHAN MODUL 
      */
     public function getJWTCustomClaims()
     {
-        return [];
+        // Kita bisa kirim role di dalam token jika mau
+        return [
+            'role' => $this->role,
+        ];
     }
 }

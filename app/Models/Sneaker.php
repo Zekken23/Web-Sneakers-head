@@ -12,9 +12,10 @@ class Sneaker extends Model
     protected $fillable = [
         'name',
         'brand',
+        'size',
         'price',
         'stock',
         'description',
-        'image', // <--- WAJIB ADA. Kalau ini ga ada, data ga akan masuk DB.
+        'image',
     ];
 }
