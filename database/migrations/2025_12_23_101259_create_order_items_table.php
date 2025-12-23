@@ -13,11 +13,15 @@ return new class extends Migration
     {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('order_id')->constrained()->onDelete('cascade');
-            $table->foreignId('sneaker_id')->constrained()->onDelete('cascade');
-            $table->string('sneaker_name'); // Simpan nama jaga-jaga kalau produk dihapus
+            // Relasi ke tabel orders
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
+
+            // Relasi ke tabel sneakers (Barang apa yang dibeli?)
+            $table->foreignId('sneaker_id')->constrained('sneakers')->onDelete('cascade');
+
+            $table->string('sneaker_name'); // Simpan nama saat beli (jaga2 kalau nama asli berubah)
             $table->integer('quantity');
-            $table->decimal('price', 15, 2); // Harga saat beli
+            $table->decimal('price', 15, 2); // Simpan harga saat beli (jaga2 kalau harga asli naik)
             $table->timestamps();
         });
     }

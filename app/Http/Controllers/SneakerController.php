@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers; // <--- SUDAH DISESUAIKAN (Tanpa \Api)
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Sneaker;
+use App\Models\Brand; // <--- Import Model Brand
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,19 +12,26 @@ class SneakerController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Sneaker::query();
+        // 1. Ambil data sepatu BESERTA data brand-nya (Eager Loading)
+        $query = Sneaker::with('brand');
 
+        // 2. Logika Pencarian (Search)
         if ($search = $request->input('search')) {
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('brand', 'like', "%{$search}%");
+                  // Cari juga kalau user ngetik nama brand (misal: "Nike")
+                  ->orWhereHas('brand', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%");
+                  });
             });
         }
 
+        // 3. Sorting
         $orderBy = $request->input('orderBy', 'created_at');
         $sortBy = $request->input('sortBy', 'desc');
         $query->orderBy($orderBy, $sortBy);
 
+        // 4. Pagination
         $limit = $request->input('limit', 10);
         $sneakers = $query->paginate($limit);
 
@@ -34,15 +42,24 @@ class SneakerController extends Controller
         ]);
     }
 
+    // --- API BARU: AMBIL LIST BRAND (Untuk Dropdown Frontend) ---
+    public function getBrands()
+    {
+        $brands = Brand::orderBy('name', 'asc')->get();
+        return response()->json($brands);
+    }
+
     public function store(Request $request)
     {
+        // Validasi sekarang cek brand_id, bukan text brand
         $validator = Validator::make($request->all(), [
-            'name'     => 'required|string',
-            'brand'    => 'required|string',
-            'price'    => 'required|numeric',
-            'stock'    => 'required|integer',
+            'name'        => 'required|string',
+            'brand_id'    => 'required|exists:brands,id', // Wajib ada di tabel brands
+            'size'        => 'required|integer',
+            'price'       => 'required|numeric',
+            'stock'       => 'required|integer',
             'description' => 'nullable|string',
-            'image'    => 'required|image|mimes:jpeg,png,jpg,gif|max:5120'
+            'image'       => 'required|image|mimes:jpeg,png,jpg,gif|max:5120'
         ]);
 
         if ($validator->fails()) {
@@ -50,16 +67,17 @@ class SneakerController extends Controller
         }
 
         $image = $request->file('image');
-        $image->storeAs('public/sneakers', $image->hashName());
+        // Simpan ke storage public secara eksplisit
+        $path = $image->store('sneakers', 'public');
 
         $sneaker = Sneaker::create([
             'name'        => $request->name,
-            'brand'       => $request->brand,
+            'brand_id'    => $request->brand_id, // Simpan ID Brand
             'size'        => $request->size,
             'price'       => $request->price,
             'stock'       => $request->stock,
             'description' => $request->description,
-            'image'       => 'sneakers/' . $image->hashName(),
+            'image'       => $path,
         ]);
 
         return response()->json([
@@ -71,7 +89,8 @@ class SneakerController extends Controller
 
     public function show($id)
     {
-        $sneaker = Sneaker::find($id);
+        // Load juga data brand-nya
+        $sneaker = Sneaker::with('brand')->find($id);
         if (!$sneaker) return response()->json(['message' => 'Data tidak ditemukan'], 404);
 
         return response()->json(['status' => 'success', 'data' => $sneaker]);
@@ -82,46 +101,32 @@ class SneakerController extends Controller
         $sneaker = Sneaker::find($id);
         if (!$sneaker) return response()->json(['message' => 'Data tidak ditemukan'], 404);
 
-        // Debugging: Cek apakah file benar-benar terbaca oleh server
-        // Jika kamu upload gambar tapi server bilang "false", berarti file terlalu besar (kena limit PHP)
-        // Uncomment baris di bawah ini jika ingin mengecek:
-        // dd($request->hasFile('image'), $request->all());
-
         $validator = Validator::make($request->all(), [
             'name'        => 'sometimes|required',
-            'brand'       => 'sometimes|required',
+            'brand_id'    => 'sometimes|required|exists:brands,id', // Validasi ID
             'size'        => 'sometimes|required',
             'price'       => 'sometimes|required|numeric',
             'stock'       => 'sometimes|required|numeric',
             'description' => 'nullable',
-            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // Max 10MB
+            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        // Update Text
         if ($request->has('name')) $sneaker->name = $request->name;
-        if ($request->has('brand')) $sneaker->brand = $request->brand;
+        if ($request->has('brand_id')) $sneaker->brand_id = $request->brand_id; // Update ID
         if ($request->has('size')) $sneaker->size = $request->size;
         if ($request->has('price')) $sneaker->price = $request->price;
         if ($request->has('stock')) $sneaker->stock = $request->stock;
         if ($request->has('description')) $sneaker->description = $request->description;
 
-        // --- BAGIAN PENTING: UPDATE GAMBAR ---
         if ($request->hasFile('image')) {
-
-            // 1. Hapus gambar lama jika ada
             if ($sneaker->image && Storage::disk('public')->exists($sneaker->image)) {
                 Storage::disk('public')->delete($sneaker->image);
             }
-
-            // 2. Simpan gambar baru DENGAN DISK 'PUBLIC' SECARA EKSPLISIT
-            // Ini akan menyimpan file ke: storage/app/public/sneakers
             $path = $request->file('image')->store('sneakers', 'public');
-
-            // 3. Simpan path ke database
             $sneaker->image = $path;
         }
 
@@ -139,8 +144,8 @@ class SneakerController extends Controller
         $sneaker = Sneaker::find($id);
         if (!$sneaker) return response()->json(['message' => 'Not Found'], 404);
 
-        if ($sneaker->image && Storage::exists('public/' . $sneaker->image)) {
-            Storage::delete('public/' . $sneaker->image);
+        if ($sneaker->image && Storage::disk('public')->exists($sneaker->image)) {
+            Storage::disk('public')->delete($sneaker->image);
         }
 
         $sneaker->delete();

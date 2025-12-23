@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Sepatu</title>
+    <title>Edit Sepatu - Sneakershead.co</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>body { font-family: 'Poppins', sans-serif; }</style>
@@ -24,7 +24,9 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Brand</label>
-                    <input type="text" id="brand" class="w-full border p-2 rounded mt-1" required>
+                    <select id="brand_id" class="w-full border p-2 rounded mt-1 bg-white focus:ring-2 focus:ring-blue-500 outline-none" required>
+                        <option value="">Memuat data...</option>
+                    </select>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Size</label>
@@ -60,8 +62,8 @@
             </div>
 
             <div class="flex justify-end gap-3 mt-6">
-                <a href="/dashboard" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Batal</a>
-                <button type="submit" id="btnSubmit" class="px-6 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 font-bold">Update Data</button>
+                <a href="/dashboard" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition">Batal</a>
+                <button type="submit" id="btnSubmit" class="px-6 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 font-bold transition shadow">Update Data</button>
             </div>
         </form>
     </div>
@@ -70,7 +72,7 @@
         const token = localStorage.getItem('jwt_token');
         if (!token) window.location.href = '/login';
 
-        // 1. Ambil ID dari URL (contoh: ?id=3)
+        // 1. Ambil ID dari URL
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
 
@@ -79,8 +81,33 @@
             window.location.href = '/dashboard';
         }
 
-        // 2. Load Data Lama saat Halaman Dibuka
-        document.addEventListener('DOMContentLoaded', async () => {
+        // 2. Fungsi Load Daftar Brand
+        async function loadBrands() {
+            try {
+                const response = await fetch('/api/brands', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Accept': 'application/json'
+                    }
+                });
+                const brands = await response.json();
+
+                const select = document.getElementById('brand_id');
+                select.innerHTML = '<option value="">-- Pilih Brand --</option>'; // Reset
+
+                brands.forEach(brand => {
+                    const option = document.createElement('option');
+                    option.value = brand.id; // Value = ID
+                    option.text = brand.name; // Teks = Nama Brand
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Gagal load brands:', error);
+            }
+        }
+
+        // 3. Fungsi Load Data Sepatu (Dipanggil setelah loadBrands selesai)
+        async function loadSneakerData() {
             try {
                 const response = await fetch(`/api/sneakers/${id}`);
                 const result = await response.json();
@@ -96,7 +123,8 @@
                 // Isi Form dengan Data Lama
                 document.getElementById('sneakerId').value = item.id;
                 document.getElementById('name').value = item.name;
-                document.getElementById('brand').value = item.brand;
+                document.getElementById('brand_id').value = item.brand_id;
+
                 document.getElementById('size').value = item.size;
                 document.getElementById('price').value = item.price;
                 document.getElementById('stock').value = item.stock;
@@ -111,11 +139,19 @@
 
             } catch (error) {
                 console.error(error);
-                alert('Gagal mengambil data.');
+                alert('Gagal mengambil data sepatu.');
             }
+        }
+
+        // 4. Jalankan Load Data Berurutan
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Kita tunggu brands dimuat dulu, baru isi data sepatu
+            // Agar dropdown 'brand_id' sudah siap saat kita set value-nya
+            await loadBrands();
+            await loadSneakerData();
         });
 
-        // 3. Proses Update Data
+        // 5. Proses Update Data
         document.getElementById('editForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -123,27 +159,27 @@
             btn.innerText = 'Mengupdate...';
             btn.disabled = true;
 
-            // Pakai FormData karena ada potensi upload file
             const formData = new FormData();
             formData.append('name', document.getElementById('name').value);
-            formData.append('brand', document.getElementById('brand').value);
+            // MODIFIKASI: Kirim brand_id dari dropdown
+            formData.append('brand_id', document.getElementById('brand_id').value);
             formData.append('size', document.getElementById('size').value);
             formData.append('price', document.getElementById('price').value);
             formData.append('stock', document.getElementById('stock').value);
             formData.append('description', document.getElementById('description').value);
 
-            // Cek ada gambar baru atau tidak
             const imageFile = document.getElementById('image').files[0];
             if (imageFile) {
                 formData.append('image', imageFile);
             }
 
-            // PENTING: Method Spoofing untuk Laravel (karena FormData cuma support POST)
-
+            // Method Spoofing tidak diperlukan di sini karena kita pakai POST murni di route API
+            // (Tapi kalau controller kamu ketat soal PUT/PATCH, bisa tambahkan _method)
+            // formData.append('_method', 'PUT');
 
             try {
                 const response = await fetch(`/api/sneakers/${id}`, {
-                    method: 'POST', // Gunakan POST tapi ada _method: PUT di dalamnya
+                    method: 'POST',
                     headers: {
                         'Authorization': 'Bearer ' + token,
                         'Accept': 'application/json'

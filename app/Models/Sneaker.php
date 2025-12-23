@@ -9,13 +9,18 @@ class Sneaker extends Model
 {
     use HasFactory;
 
+    // Ganti 'brand' jadi 'brand_id'
     protected $fillable = [
-        'name',
-        'brand',
-        'size',
-        'price',
-        'stock',
-        'description',
-        'image',
+        'name', 'brand_id', 'size', 'price', 'stock', 'description', 'image'
     ];
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }

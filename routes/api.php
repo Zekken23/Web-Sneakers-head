@@ -21,7 +21,6 @@ Route::post('login', [AuthController::class, 'login']);
 Route::get('sneakers', [SneakerController::class, 'index']);
 Route::get('sneakers/{id}', [SneakerController::class, 'show']);
 
-
 // --- 2. PROTECTED ROUTES (Harus Login) ---
 Route::middleware('auth:api')->group(function () {
 
@@ -33,7 +32,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('sneakers', [SneakerController::class, 'store']);
     Route::post('sneakers/{id}', [SneakerController::class, 'update']); // Pakai POST untuk update data + file
     Route::delete('sneakers/{id}', [SneakerController::class, 'destroy']);
-
+    Route::get('brands', [SneakerController::class, 'getBrands']);
     // Checkout
     Route::post('/checkout', [OrderController::class, 'checkout']);
 

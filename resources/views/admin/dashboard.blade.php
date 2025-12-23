@@ -11,21 +11,19 @@
 <body class="bg-gray-100">
 
     <nav class="bg-white shadow-md p-4 flex justify-between items-center">
+        <div class="text-xl font-bold text-blue-600">
+            Sneakershead.co <span class="text-sm text-gray-500 font-normal">Admin Area</span>
+        </div>
 
-    <div class="text-xl font-bold text-blue-600">
-        Sneakershead.co <span class="text-sm text-gray-500 font-normal">Admin Area</span>
-    </div>
-
-    <div class="flex items-center gap-6">
-
-        <a href="/" class="text-gray-600 hover:text-blue-600 font-medium transition duration-200">
-            Home
-        </a>
-        <button id="logoutBtn" class="text-red-500 hover:text-red-700 font-medium">
-            Logout
-        </button>
-    </div>
-</nav>
+        <div class="flex items-center gap-6">
+            <a href="/" class="text-gray-600 hover:text-blue-600 font-medium transition duration-200">
+                Home
+            </a>
+            <button id="logoutBtn" class="text-red-500 hover:text-red-700 font-medium">
+                Logout
+            </button>
+        </div>
+    </nav>
 
     <div class="max-w-6xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
         <div class="flex justify-between items-center mb-6">
@@ -68,26 +66,23 @@
         // Fungsi Load Data
         async function loadSneakers() {
             try {
-                // Fetch ke API Sneakers (Method GET Public)
+                // Fetch ke API Sneakers
                 const response = await fetch('/api/sneakers');
                 const result = await response.json();
 
                 const tableBody = document.getElementById('sneakerTable');
                 tableBody.innerHTML = ''; // Kosongkan tabel
 
-                // PERBAIKAN LOGIKA PAGINATION DISINI:
-                // Controller mengirim: { status: 'success', data: { current_page: 1, data: [...] } }
-                // Jadi array sepatunya ada di: result.data.data
+                // Ambil array data dari hasil pagination Laravel
+                const sneakers = result.data.data;
 
-                const sneakers = result.data.data; // <--- INI KUNCINYA
-
-                if (sneakers.length === 0) {
+                if (!sneakers || sneakers.length === 0) {
                     tableBody.innerHTML = '<tr><td colspan="6" class="text-center py-4">Belum ada data sepatu.</td></tr>';
                     return;
                 }
 
                 sneakers.forEach(item => {
-                    // Cek gambar: Kalau user upload file, pakai /storage/... Kalau link, pakai langsung
+                    // Logic URL Gambar
                     let imageUrl = item.image;
                     if (item.image && !item.image.startsWith('http')) {
                         imageUrl = `/storage/${item.image}`;
@@ -95,13 +90,17 @@
                         imageUrl = 'https://via.placeholder.com/100?text=No+Image';
                     }
 
+                    // --- PERUBAHAN PENTING DI SINI (BRAND) ---
+                    // Cek apakah item.brand ada (tidak null)
+                    const brandName = item.brand ? item.brand.name : '-';
+
                     const row = `
                         <tr class="border-b border-gray-200 hover:bg-gray-100">
                             <td class="py-3 px-6">
                                 <img src="${imageUrl}" class="w-16 h-16 object-cover rounded shadow-sm" alt="Sepatu">
                             </td>
                             <td class="py-3 px-6 font-medium text-gray-800">${item.name}</td>
-                            <td class="py-3 px-6">${item.brand}</td>
+                            <td class="py-3 px-6">${brandName}</td>
                             <td class="py-3 px-6">${item.size || '-'}</td>
                             <td class="py-3 px-6 text-green-600 font-bold">Rp ${parseInt(item.price).toLocaleString('id-ID')}</td>
                             <td class="py-3 px-6 text-center">
@@ -136,7 +135,7 @@
                 const response = await fetch(`/api/sneakers/${id}`, {
                     method: 'DELETE',
                     headers: {
-                        'Authorization': 'Bearer ' + token, // Wajib Token
+                        'Authorization': 'Bearer ' + token,
                         'Content-Type': 'application/json'
                     }
                 });
@@ -154,16 +153,34 @@
 
         // Fungsi Logout
         async function logout() {
+            const token = localStorage.getItem('jwt_token');
             try {
                 await fetch('/api/logout', {
                     method: 'POST',
-                    headers: { 'Authorization': 'Bearer ' + token }
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Accept': 'application/json'
+                    }
                 });
-            } catch (e) { console.log('Logout lokal saja'); }
+            } catch (error) {
+                console.log('Logout server skip, lanjut logout lokal.');
+            }
 
             localStorage.removeItem('jwt_token');
             localStorage.removeItem('user_data');
             window.location.href = '/login';
+        }
+
+        // Event Listener Logout
+        const btnLogout = document.getElementById('logoutBtn');
+        if (btnLogout) {
+            btnLogout.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Apakah Anda yakin ingin keluar?')) {
+                    this.innerText = 'Keluar...';
+                    logout();
+                }
+            });
         }
 
         // Jalankan saat halaman dibuka

@@ -9,19 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+   public function up()
     {
-        Schema::table('sneakers', function (Blueprint $table) {
-            $table->string('size')->nullable()->after('brand'); // Tambah kolom size
+        Schema::create('brands', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique(); // Nama brand (Nike, Adidas, dll)
+            $table->timestamps();
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('sneakers', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('brands');
     }
 };

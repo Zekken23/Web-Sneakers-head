@@ -2,20 +2,20 @@
 
 namespace App\Models;
 
-// Pastikan namespace ini sesuai dengan package yang kamu install
-// Jika pakai "php-open-source-saver/jwt-auth", gunakan baris ini:
+// Import Interface JWT Contract dari library yang sudah diinstall
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-
 
 class User extends Authenticatable implements JWTSubject
 {
-    // Tambahkan HasApiTokens di sini
-    use HasApiTokens, HasFactory, Notifiable;
+    /**
+     * PENTING:
+     * Kita HAPUS "HasApiTokens" dari sini karena kita menggunakan JWT murni.
+     * Jika "HasApiTokens" tetap ada saat laravel/sanctum dihapus, website akan error.
+     */
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +26,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        'role', // <--- INI WAJIB ADA (Dan sudah ada di kodemu)
+        'role', // Wajib ada sesuai fitur register kamu
     ];
 
     /**
@@ -52,10 +52,13 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
-    // --- JWT METHODS (WAJIB ADA) ---
+    // =========================================================
+    // WAJIB ADA: METHOD UNTUK JWT AUTHENTICATION
+    // =========================================================
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
+     * (Biasanya ID user)
      *
      * @return mixed
      */
@@ -66,14 +69,14 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
+     * (Kita bisa menyisipkan data tambahan ke dalam token, misal: role)
      *
      * @return array
      */
     public function getJWTCustomClaims()
     {
-        // Kita bisa kirim role di dalam token jika mau
         return [
-            'role' => $this->role,
+            'role' => $this->role, // Berguna untuk cek hak akses di frontend nanti
         ];
     }
 }
