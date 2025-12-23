@@ -21,19 +21,15 @@
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* --- CSS ANIMASI BERPUTAR (MARQUEE) --- */
         @keyframes scroll {
             0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); } /* Geser 50% karena konten diduplikasi */
+            100% { transform: translateX(-50%); }
         }
-
         .animate-scroll {
             display: flex;
             width: max-content;
-            animation: scroll 30s linear infinite; /* Atur kecepatan di sini (30s) */
+            animation: scroll 30s linear infinite;
         }
-
-        /* Berhenti saat kursor nempel */
         .animate-scroll:hover {
             animation-play-state: paused;
         }
@@ -44,6 +40,7 @@
     <header class="bg-[#0F172A]/90 backdrop-blur-md fixed top-0 left-0 right-0 z-50 border-b border-gray-800">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="#" class="text-2xl font-bold text-white tracking-tighter">Sneakershead<span class="text-[#2DD4BF]">.co</span></a>
+
             <div class="hidden md:flex space-x-8 items-center text-sm font-medium">
                 <a href="#" class="text-gray-300 hover:text-[#2DD4BF] transition-colors">Home</a>
                 <a href="#new-arrivals" class="text-gray-300 hover:text-[#2DD4BF] transition-colors">New Arrivals</a>
@@ -51,8 +48,19 @@
                 <a href="#gallery" class="text-gray-300 hover:text-[#2DD4BF] transition-colors">Gallery</a>
                 <a href="#contact" class="text-gray-300 hover:text-[#2DD4BF] transition-colors">Contact</a>
             </div>
-            <div id="auth-buttons" class="flex items-center space-x-4">
-                <a href="/login" class="px-6 py-2 border border-[#2DD4BF] text-[#2DD4BF] rounded-full hover:bg-[#2DD4BF] hover:text-[#0F172A] transition font-bold text-sm">Login</a>
+
+            <div class="flex items-center space-x-6">
+
+                <a href="/cart" class="relative text-gray-300 hover:text-[#2DD4BF] transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                    <span id="cart-badge" class="hidden absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+                </a>
+
+                <div id="auth-buttons">
+                    <a href="/login" class="px-6 py-2 border border-[#2DD4BF] text-[#2DD4BF] rounded-full hover:bg-[#2DD4BF] hover:text-[#0F172A] transition font-bold text-sm">Login</a>
+                </div>
             </div>
         </nav>
     </header>
@@ -83,6 +91,7 @@
                 </div>
                 <a href="#" class="text-[#2DD4BF] font-bold hover:underline">View All</a>
             </div>
+
             <div id="landing-sneaker-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div class="col-span-full flex flex-col items-center justify-center py-12">
                     <div class="w-12 h-12 border-4 border-[#2DD4BF] border-t-transparent rounded-full animate-spin mb-3"></div>
@@ -101,7 +110,6 @@
         </div>
 
         <div class="flex animate-scroll gap-8 px-4">
-
             <div class="flex-shrink-0 w-72 h-96 relative rounded-2xl overflow-hidden group cursor-pointer shadow-lg hover:scale-95 transition duration-300">
                 <img src="https://images.unsplash.com/photo-1552346154-21d32810aba3?q=80&w=2070" class="absolute inset-0 w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
@@ -129,7 +137,6 @@
                 <div class="absolute bottom-6 left-6"><h3 class="text-2xl font-bold text-white">NEW ARRIVAL</h3><p class="text-[#2DD4BF] text-sm">Shop Now &rarr;</p></div>
             </div>
 
-
             <div class="flex-shrink-0 w-72 h-96 relative rounded-2xl overflow-hidden group cursor-pointer shadow-lg hover:scale-95 transition duration-300">
                 <img src="https://images.unsplash.com/photo-1552346154-21d32810aba3?q=80&w=2070" class="absolute inset-0 w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"></div>
@@ -156,7 +163,6 @@
                 <div class="absolute top-4 right-4 bg-[#2DD4BF] text-[#0F172A] font-bold px-3 py-1 rounded-full text-xs animate-bounce">HOT</div>
                 <div class="absolute bottom-6 left-6"><h3 class="text-2xl font-bold text-white">NEW ARRIVAL</h3><p class="text-[#2DD4BF] text-sm">Shop Now &rarr;</p></div>
             </div>
-
         </div>
     </section>
 
@@ -242,7 +248,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Cek Login
+            // 1. Cek Login & Update UI
+            checkLogin();
+
+            // 2. Load Data New Arrivals
+            loadNewArrivals();
+
+            // 3. Update Badge Cart
+            updateCartBadge();
+        });
+
+        // --- FUNGSI AUTH ---
+        function checkLogin() {
             const token = localStorage.getItem('jwt_token');
             const userString = localStorage.getItem('user_data');
             const authContainer = document.getElementById('auth-buttons');
@@ -253,19 +270,16 @@
                 let buttonsHtml = '';
 
                 if (user.role === 'admin') {
-                    buttonsHtml += `<a href="/dashboard" class="px-5 py-2 bg-[#2DD4BF] text-[#0F172A] rounded-full font-bold text-sm hover:bg-[#1f9d8d] transition">Dashboard Admin</a>`;
+                    buttonsHtml += `<a href="/dashboard" class="px-5 py-2 bg-[#2DD4BF] text-[#0F172A] rounded-full font-bold text-sm hover:bg-[#1f9d8d] transition">Dashboard</a>`;
                     if(heroAdminBtn) heroAdminBtn.classList.remove('hidden');
                 } else {
-                    buttonsHtml += `<div class="flex items-center space-x-3 bg-[#1E293B] py-1 px-3 rounded-full border border-gray-700"><img src="https://ui-avatars.com/api/?name=${user.name}&background=2DD4BF&color=0F172A" class="w-8 h-8 rounded-full"><span class="font-medium text-sm text-gray-300">Hi, ${user.name.split(' ')[0]}</span></div>`;
+                    buttonsHtml += `<div class="flex items-center space-x-2 bg-[#1E293B] py-1 px-3 rounded-full border border-gray-700"><img src="https://ui-avatars.com/api/?name=${user.name}&background=2DD4BF&color=0F172A" class="w-6 h-6 rounded-full"><span class="font-medium text-xs text-gray-300">Hi, ${user.name.split(' ')[0]}</span></div>`;
                 }
 
-                buttonsHtml += `<button onclick="logout()" class="text-gray-400 hover:text-red-500 text-sm font-medium ml-2">Logout</button>`;
+                buttonsHtml += `<button onclick="logout()" class="text-gray-400 hover:text-red-500 text-xs font-bold ml-3 uppercase">Logout</button>`;
                 authContainer.innerHTML = buttonsHtml;
             }
-
-            // Load Data
-            loadNewArrivals();
-        });
+        }
 
         function logout() {
             if(confirm('Yakin ingin logout?')) {
@@ -275,6 +289,45 @@
             }
         }
 
+        // --- FUNGSI CART ---
+        function updateCartBadge() {
+            const cart = JSON.parse(localStorage.getItem('cart_items')) || [];
+            const badge = document.getElementById('cart-badge');
+            const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+            if (totalItems > 0) {
+                badge.innerText = totalItems;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function addToCart(id, name, price, brand, size, image) {
+            const token = localStorage.getItem('jwt_token');
+            if (!token) {
+                alert("Silakan login untuk berbelanja!");
+                window.location.href = '/login';
+                return;
+            }
+
+            let cart = JSON.parse(localStorage.getItem('cart_items')) || [];
+            const existingItem = cart.find(item => item.id === id);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ id, name, price, brand, size, image, quantity: 1 });
+            }
+
+            localStorage.setItem('cart_items', JSON.stringify(cart));
+            updateCartBadge();
+
+            // Animasi kecil feedback (optional)
+            alert('Berhasil masuk keranjang!');
+        }
+
+        // --- FUNGSI LOAD DATA ---
         async function loadNewArrivals() {
             const container = document.getElementById('landing-sneaker-container');
 
@@ -290,7 +343,7 @@
                     return;
                 }
 
-                const latestSneakers = sneakers.slice(0, 4);
+                const latestSneakers = sneakers.slice(0, 4); // Ambil 4 teratas
 
                 latestSneakers.forEach((item, index) => {
                     let imageUrl = 'https://via.placeholder.com/400x400?text=No+Image';
@@ -304,7 +357,7 @@
                     container.innerHTML += `
                         <div class="bg-[#1E293B] rounded-2xl overflow-hidden shadow-xl hover:-translate-y-2 transition-transform duration-300 group h-full flex flex-col">
                             <div class="relative h-64 w-full bg-gray-800 overflow-hidden shrink-0">
-                                <img src="${imageUrl}" alt="${item.name}" class="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://via.placeholder.com/400x400?text=Error'">
+                                <img src="${imageUrl}" alt="${item.name}" class="w-full h-full object-cover object-center" onerror="this.src='https://via.placeholder.com/400x400?text=Error'">
                                 <div class="absolute top-4 right-4 bg-[#2DD4BF] text-[#0F172A] text-xs font-bold px-3 py-1 rounded-full shadow-md z-10">NEW</div>
                             </div>
                             <div class="p-6 flex flex-col flex-grow justify-between">
@@ -314,8 +367,12 @@
                                 </div>
                                 <div class="flex justify-between items-center mt-auto">
                                     <span class="text-xl font-bold text-[#2DD4BF]">${hargaRupiah}</span>
-                                    <button class="bg-white/10 w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#2DD4BF] hover:text-[#0F172A] transition">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+
+                                    <button onclick="addToCart(${item.id}, '${item.name}', ${item.price}, '${item.brand}', '${item.size || ''}', '${imageUrl}')"
+                                        class="bg-white/10 w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#2DD4BF] hover:text-[#0F172A] transition cursor-pointer" title="Add to Cart">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
@@ -327,7 +384,6 @@
                 console.error('Gagal ambil data:', error);
                 container.innerHTML = `<div class="col-span-full text-center text-red-400">Gagal memuat data.</div>`;
             }
-
         }
     </script>
 </body>
