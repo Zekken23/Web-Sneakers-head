@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderController;
+
 // AuthController biasanya ada di folder Api
 Route::post('register', [\App\Http\Controllers\Api\AuthController::class, 'register']);
 Route::post('login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
@@ -24,5 +26,6 @@ Route::middleware('auth:api')->group(function () {
     Route::post('sneakers', [\App\Http\Controllers\SneakerController::class, 'store']);
     Route::post('sneakers/{id}', [\App\Http\Controllers\SneakerController::class, 'update']);
     Route::delete('sneakers/{id}', [\App\Http\Controllers\SneakerController::class, 'destroy']);
+    Route::middleware('auth:api')->post('/checkout', [OrderController::class, 'checkout']);
 
 });

@@ -24,7 +24,15 @@ Route::get('/dashboard/sneakers/create', function () {
     return view('admin.sneakers.create');
 });
 
+Route::get('/sneakers/create', function () {
+    return view('admin.sneakers.create'); // Sesuaikan dengan lokasi folder aslimu
+});
+
 // Kita gunakan parameter ?id=... di URL nanti untuk edit
 Route::get('/dashboard/sneakers/edit', function () {
     return view('admin.sneakers.edit');
+});
+
+Route::get('/cart', function () {
+    return view('cart');
 });
