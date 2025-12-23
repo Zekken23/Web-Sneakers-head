@@ -11,9 +11,21 @@
 <body class="bg-gray-100">
 
     <nav class="bg-white shadow-md p-4 flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-blue-600">Sneakershead.co <span class="text-sm text-gray-500 font-normal ml-2">Admin Area</span></h1>
-        <button onclick="logout()" class="text-red-500 hover:text-red-700 font-medium">Logout</button>
-    </nav>
+
+    <div class="text-xl font-bold text-blue-600">
+        Sneakershead.co <span class="text-sm text-gray-500 font-normal">Admin Area</span>
+    </div>
+
+    <div class="flex items-center gap-6">
+
+        <a href="/" class="text-gray-600 hover:text-blue-600 font-medium transition duration-200">
+            Home
+        </a>
+        <button id="logoutBtn" class="text-red-500 hover:text-red-700 font-medium">
+            Logout
+        </button>
+    </div>
+</nav>
 
     <div class="max-w-6xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
         <div class="flex justify-between items-center mb-6">

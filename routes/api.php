@@ -2,30 +2,39 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SneakerController; // Import Controller Utama
+use App\Http\Controllers\Api\AuthController; // Import Auth Controller
 
-// AuthController biasanya ada di folder Api
-Route::post('register', [\App\Http\Controllers\Api\AuthController::class, 'register']);
-Route::post('login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+*/
 
-// SneakerController biasanya ada di folder Controllers biasa (bukan Api)
-// Jadi kita panggil langsung ke alamat aslinya
-Route::get('sneakers', [\App\Http\Controllers\SneakerController::class, 'index']);
-Route::get('sneakers/{id}', [\App\Http\Controllers\SneakerController::class, 'show']);
+// --- 1. PUBLIC ROUTES (Tanpa Login) ---
+
+// Auth
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+
+// Sneakers (Read Only)
+Route::get('sneakers', [SneakerController::class, 'index']);
+Route::get('sneakers/{id}', [SneakerController::class, 'show']);
 
 
-// =================================================================
-// 2. PROTECTED ROUTES (Harus Login)
-// =================================================================
+// --- 2. PROTECTED ROUTES (Harus Login) ---
 Route::middleware('auth:api')->group(function () {
 
     // Auth Features
-    Route::post('logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
-    Route::get('me', [\App\Http\Controllers\Api\AuthController::class, 'me']);
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('me', [AuthController::class, 'me']);
 
-    // CRUD Sneakers (Arahkan ke SneakerController di folder utama)
-    Route::post('sneakers', [\App\Http\Controllers\SneakerController::class, 'store']);
-    Route::post('sneakers/{id}', [\App\Http\Controllers\SneakerController::class, 'update']);
-    Route::delete('sneakers/{id}', [\App\Http\Controllers\SneakerController::class, 'destroy']);
-    Route::middleware('auth:api')->post('/checkout', [OrderController::class, 'checkout']);
+    // CRUD Sneakers (Admin Features)
+    Route::post('sneakers', [SneakerController::class, 'store']);
+    Route::post('sneakers/{id}', [SneakerController::class, 'update']); // Pakai POST untuk update data + file
+    Route::delete('sneakers/{id}', [SneakerController::class, 'destroy']);
+
+    // Checkout
+    Route::post('/checkout', [OrderController::class, 'checkout']);
 
 });

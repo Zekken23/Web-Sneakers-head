@@ -29,10 +29,9 @@ Route::get('/sneakers/create', function () {
 });
 
 // Kita gunakan parameter ?id=... di URL nanti untuk edit
-Route::get('/dashboard/sneakers/edit', function () {
-    return view('admin.sneakers.edit');
+Route::get('/sneakers/edit', function () {
+    return view('admin.sneakers.edit'); // Pastikan file resources/views/admin/sneakers/edit.blade.php ada
 });
-
 Route::get('/cart', function () {
     return view('cart');
 });

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers; // <--- SUDAH DISESUAIKAN (Tanpa \Api)
 
-use App\Models\Sneaker;
 use Illuminate\Http\Request;
+use App\Models\Sneaker;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 
 class SneakerController extends Controller
 {
-    // ... (Function INDEX tetap sama) ...
     public function index(Request $request)
     {
         $query = Sneaker::query();
@@ -36,22 +36,31 @@ class SneakerController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'brand' => 'required|string',
-            'price' => 'required|numeric',
-            'stock' => 'required|integer',
+        $validator = Validator::make($request->all(), [
+            'name'     => 'required|string',
+            'brand'    => 'required|string',
+            'price'    => 'required|numeric',
+            'stock'    => 'required|integer',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120' // Konsisten pakai 'image'
+            'image'    => 'required|image|mimes:jpeg,png,jpg,gif|max:5120'
         ]);
 
-        if ($request->hasFile('image')) {
-            // Simpan gambar, hasilnya misal: "sneakers/asdsad23.jpg"
-            $path = $request->file('image')->store('sneakers', 'public');
-            $validated['image'] = $path;
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
 
-        $sneaker = Sneaker::create($validated);
+        $image = $request->file('image');
+        $image->storeAs('public/sneakers', $image->hashName());
+
+        $sneaker = Sneaker::create([
+            'name'        => $request->name,
+            'brand'       => $request->brand,
+            'size'        => $request->size,
+            'price'       => $request->price,
+            'stock'       => $request->stock,
+            'description' => $request->description,
+            'image'       => 'sneakers/' . $image->hashName(),
+        ]);
 
         return response()->json([
             'status' => 'success',
@@ -63,73 +72,75 @@ class SneakerController extends Controller
     public function show($id)
     {
         $sneaker = Sneaker::find($id);
-
-        if (!$sneaker) {
-            return response()->json(['message' => 'Data tidak ditemukan'], 404);
-        }
+        if (!$sneaker) return response()->json(['message' => 'Data tidak ditemukan'], 404);
 
         return response()->json(['status' => 'success', 'data' => $sneaker]);
     }
 
-    // [PERBAIKAN UTAMA DI SINI]
     public function update(Request $request, $id)
     {
         $sneaker = Sneaker::find($id);
+        if (!$sneaker) return response()->json(['message' => 'Data tidak ditemukan'], 404);
 
-        if (!$sneaker) {
-            return response()->json(['message' => 'Data tidak ditemukan'], 404);
-        }
+        // Debugging: Cek apakah file benar-benar terbaca oleh server
+        // Jika kamu upload gambar tapi server bilang "false", berarti file terlalu besar (kena limit PHP)
+        // Uncomment baris di bawah ini jika ingin mengecek:
+        // dd($request->hasFile('image'), $request->all());
 
-        // 1. Validasi ganti jadi 'image' (bukan file_path) biar konsisten
-        $validated = $request->validate([
-            'name' => 'sometimes|string',
-            'brand' => 'sometimes|string',
-            'size' => 'required|numeric',
-            'price' => 'sometimes|numeric',
-            'stock' => 'sometimes|integer',
-            'description' => 'nullable|string',
-            'image' => 'nullable|file|image|max:5000'
+        $validator = Validator::make($request->all(), [
+            'name'        => 'sometimes|required',
+            'brand'       => 'sometimes|required',
+            'size'        => 'sometimes|required',
+            'price'       => 'sometimes|required|numeric',
+            'stock'       => 'sometimes|required|numeric',
+            'description' => 'nullable',
+            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // Max 10MB
         ]);
 
-        // 2. Cek apakah user upload gambar baru
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        // Update Text
+        if ($request->has('name')) $sneaker->name = $request->name;
+        if ($request->has('brand')) $sneaker->brand = $request->brand;
+        if ($request->has('size')) $sneaker->size = $request->size;
+        if ($request->has('price')) $sneaker->price = $request->price;
+        if ($request->has('stock')) $sneaker->stock = $request->stock;
+        if ($request->has('description')) $sneaker->description = $request->description;
+
+        // --- BAGIAN PENTING: UPDATE GAMBAR ---
         if ($request->hasFile('image')) {
 
-            // Hapus gambar lama dulu (biar storage gak penuh)
+            // 1. Hapus gambar lama jika ada
             if ($sneaker->image && Storage::disk('public')->exists($sneaker->image)) {
                 Storage::disk('public')->delete($sneaker->image);
             }
 
-            // Upload gambar baru
-            $file = $request->file('image');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('sneakers', $fileName, 'public');
+            // 2. Simpan gambar baru DENGAN DISK 'PUBLIC' SECARA EKSPLISIT
+            // Ini akan menyimpan file ke: storage/app/public/sneakers
+            $path = $request->file('image')->store('sneakers', 'public');
 
-            // Masukkan path baru ke array validated
-            $validated['image'] = $path;
+            // 3. Simpan path ke database
+            $sneaker->image = $path;
         }
 
-        // 3. Update database
-        // Otomatis kolom 'image' di database terisi string path baru
-        $sneaker->update($validated);
+        $sneaker->save();
 
         return response()->json([
-            'status' => 'success',
-            'message' => 'Data berhasil diupdate',
-            'data' => $sneaker
-        ]);
+            'success' => true,
+            'message' => 'Data Berhasil Diupdate!',
+            'data'    => $sneaker
+        ], 200);
     }
 
     public function destroy($id)
     {
         $sneaker = Sneaker::find($id);
+        if (!$sneaker) return response()->json(['message' => 'Not Found'], 404);
 
-        if (!$sneaker) {
-            return response()->json(['message' => 'Data tidak ditemukan'], 404);
-        }
-
-        // Hapus file fisik
-        if ($sneaker->image && Storage::disk('public')->exists($sneaker->image)) {
-            Storage::disk('public')->delete($sneaker->image);
+        if ($sneaker->image && Storage::exists('public/' . $sneaker->image)) {
+            Storage::delete('public/' . $sneaker->image);
         }
 
         $sneaker->delete();
